@@ -3,30 +3,43 @@ import { Input, Button, message } from "antd";
 
 const GRID_SIZE = 10;
 
+type Position = [number, number];
+
+interface LoginResponse {
+  status: string;
+}
+
 function App() {
-  const [snake, setSnake] = useState([]);
-  const [food, setFood] = useState([]);
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [snake, setSnake] = useState<Position[]>([]);
+  const [food, setFood] = useState<Position>([0, 0]);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
     if (loggedIn) {
       startGame();
-      window.addEventListener("keydown", handleKeyPress);
-      return () => window.removeEventListener("keydown", handleKeyPress);
+      const handleKey = (event: KeyboardEvent) => handleKeyPress(event);
+      window.addEventListener("keydown", handleKey);
+
+      return () => {
+        window.removeEventListener("keydown", handleKey);
+      };
     }
+
+    // 明确返回 `undefined` 以避免 TypeScript 提示错误
+    return undefined;
   }, [loggedIn]);
 
   const startGame = async () => {
     const res = await fetch("http://localhost:8081/game/start", { method: "POST" });
-    const data = await res.json();
+    const data: { snake: Position[]; food: Position } = await res.json();
     setSnake(data.snake);
     setFood(data.food);
   };
 
-  const handleKeyPress = async (event) => {
-    let direction = null;
+  const handleKeyPress = async (event: KeyboardEvent) => {
+    let direction: "up" | "down" | "left" | "right" | null = null;
     if (event.key === "ArrowUp") direction = "up";
     if (event.key === "ArrowDown") direction = "down";
     if (event.key === "ArrowLeft") direction = "left";
@@ -34,7 +47,7 @@ function App() {
     if (!direction) return;
 
     const res = await fetch(`http://localhost:8081/game/move/${direction}`, { method: "POST" });
-    const data = await res.json();
+    const data: { snake: Position[]; food: Position } = await res.json();
     setSnake(data.snake);
     setFood(data.food);
   };
@@ -45,8 +58,9 @@ function App() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password }),
     });
-    const data = await res.json();
-    
+
+    const data: LoginResponse = await res.json();
+
     if (data.status === "200") {
       message.success("登录成功！");
       setLoggedIn(true);
@@ -60,17 +74,17 @@ function App() {
       {!loggedIn ? (
         <div style={{ maxWidth: "300px", margin: "auto" }}>
           <h2>用户登录</h2>
-          <Input 
-            placeholder="用户名" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} 
-            style={{ marginBottom: "10px" }} 
+          <Input
+            placeholder="用户名"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            style={{ marginBottom: "10px" }}
           />
-          <Input.Password 
-            placeholder="密码" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} 
-            style={{ marginBottom: "10px" }} 
+          <Input.Password
+            placeholder="密码"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ marginBottom: "10px" }}
           />
           <Button type="primary" onClick={handleLogin} block>登录</Button>
         </div>
