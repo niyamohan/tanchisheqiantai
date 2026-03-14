@@ -1,38 +1,113 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 强制锁定屏幕，禁止滚动 */
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5;
+}
+
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-.App-link {
-  color: #61dafb;
+.login-container {
+  width: 100%;
+  max-width: 380px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.game-container {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 95vh; /* 确保不超出屏幕 */
+}
+
+.game-header {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.score-display {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #1890ff;
+  margin: 5px 0;
+}
+
+.grid-board {
+  display: grid;
+  background-color: #f0f2f5;
+  border: 4px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 2px;
+}
+
+.cell {
+  width: 22px; /* 稍微缩小单元格，节省空间 */
+  height: 22px;
+  border-radius: 4px;
+  transition: all 0.1s ease;
+}
+
+.cell-empty {
+  background-color: transparent;
+}
+
+.cell-snake {
+  background-color: #52c41a;
+  box-shadow: 0 0 5px rgba(82, 196, 26, 0.5);
+}
+
+.cell-snake-head {
+  background-color: #389e0d;
+  box-shadow: 0 0 8px rgba(56, 158, 13, 0.7);
+  border-radius: 6px;
+}
+
+.cell-food {
+  background-color: #ff4d4f;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(255, 77, 79, 0.8);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.85); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.8; }
+}
+
+.game-controls {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-info {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
